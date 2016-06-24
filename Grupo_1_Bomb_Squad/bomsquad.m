@@ -22,7 +22,7 @@ function varargout = bomsquad(varargin)
 
 % Edit the above text to modify the response to help bomsquad
 
-% Last Modified by GUIDE v2.5 24-Jun-2016 14:07:43
+% Last Modified by GUIDE v2.5 24-Jun-2016 19:28:10
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -73,48 +73,107 @@ function varargout = bomsquad_OutputFcn(hObject, eventdata, handles)
 
 % Get default command line output from handles structure
 varargout{1} = handles.output;
-global thereIsTime;
+global thereIsTime startX endX f x y currentIndex bombTimer precision;
+
+precision = 0.1;
+
 thereIsTime = true;
 setTime(0);
 
+startX = -1;
+endX = 2;
+axis([startX endX -1 inf]);
+
+x = linspace(startX, endX, 20); % Function 'f' x values
+y = cos(x) - exp(-x); % Function 'f' y values
+currentIndex = 1; % The current index on 'x' array
+
+%plot(x(1:end), y(1:end));
+
+f = @(x) cos(x) - exp(-x); % Made the function available as an anonymous function 'f'
+set(handles.axes3,'YTickLabel',[]);
+
+bombTimer = timer('ExecutionMode', 'FixedRate', ...
+    'Period', 3, ...
+    'TimerFcn', {@(~,~)updateBombValue});
+
+function updateBombValue
+    global x y currentIndex precision;
+    if currentIndex <= length(x)
+        
+        disp(y(currentIndex));
+        
+        if abs(y(currentIndex)) > precision
+            disp(currentIndex);
+            plot(x(1:currentIndex), y(1:currentIndex));
+            currentIndex = currentIndex + 1;
+        else
+            disp('A bomba chegou primeiro na raiz e explodiu! Perdeu!');
+            endGame();
+        end
+    else
+        disp('Função acabou.');
+    end
+    
+function endGame
+    global thereIsTime currentIndex bombTimer;
+    currentIndex = 1;
+    thereIsTime = false;
+    setTime(0);
+    stop(bombTimer);
+    close(bomsquad);
+    exploded
+    
+
 % --- Executes on button press in startPlay.
 function startPlay_Callback(hObject, eventdata, handles)
-set(hObject, 'Enable', 'off');
-global thereIsTime;
-setTime(0);
-updateTimer(handles);
-tic; % Start to count the time
-while thereIsTime
-     currentTime = round(toc);
-     setTime(currentTime);
-     updateTimer(handles);
+    global bombTimer;
+    set(hObject, 'Enable', 'off');
+    start(bombTimer);
+    startTimer(handles);
     
-     if getTime >= 60
-         thereIsTime = false;
-     end
-     
-     pause(0.1);
-end
-
-function updateTimer(handles)
-time = getTime;
-strTime = timeToStr(time);
-set(handles.timer, 'String', strTime);
+function startTimer(handles)
+    global thereIsTime;
+    setTime(0);
+    if thereIsTime
+        updateTimer(handles, getTime);
+        tic; % Start to count the time
+        while thereIsTime
+             currentTime = round(toc);
+             setTime(currentTime);
+             updateTimer(handles, getTime);
+             pause(0.1);
+        end
+    end
+    
+function updateTimer(handles, time)
+    strTime = timeToStr(time);
+    set(handles.timer, 'String', strTime);
 
 function str = timeToStr(time)
-if time == 60
-    str = '01:00';
-else
-    str = strcat('00:', num2str(time));
-end
+    minutes = fix(time/60);
+    seconds = mod(time, 60);
+    
+    strMinutes = format_number(minutes);
+    strSeconds = format_number(seconds);
+
+    str = strcat(strMinutes, strcat(':', strSeconds));
+
+function formatted = format_number(number)
+    str_number = num2str(number);
+    if length(str_number) == 1 % In this case the time have only one digit (1..9)
+        formatted = strcat('0', str_number);
+    else
+        formatted = str_number;
+    end
 
 function setTime(time)
-global elapsedTime;
-elapsedTime = time;
+    global elapsedTime;
+    elapsedTime = time;
 
 function t = getTime
-global elapsedTime
-t = elapsedTime;
+    global elapsedTime
+    t = elapsedTime;
 
 function edit1_Callback(hObject, eventdata, handles)
 % hObject    handle to edit1 (see GCBO)
@@ -228,7 +287,7 @@ if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgr
 end
 
 
-% --- Executes on button press in pushbutton5.
+%--- Executes on button press in pushbutton5.
 function pushbutton5_Callback(hObject, eventdata, handles)
 % hObject    handle to pushbutton5 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
@@ -245,7 +304,7 @@ function edit5_Callback(hObject, eventdata, handles)
 %        str2double(get(hObject,'String')) returns contents of edit5 as a double
 
 
-% --- Executes during object creation, after setting all properties.
+%--- Executes during object creation, after setting all properties.
 function edit5_CreateFcn(hObject, eventdata, handles)
 % hObject    handle to edit5 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
@@ -256,3 +315,36 @@ function edit5_CreateFcn(hObject, eventdata, handles)
 if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
     set(hObject,'BackgroundColor','white');
 end
+
+
+
+function edit6_Callback(hObject, eventdata, handles)
+% hObject    handle to edit6 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: get(hObject,'String') returns contents of edit6 as text
+%        str2double(get(hObject,'String')) returns contents of edit6 as a double
+
+
+% --- Executes during object creation, after setting all properties.
+function edit6_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to edit6 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: edit controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+
+% --- Executes on button press in deleteTimer.
+function deleteTimer_Callback(hObject, eventdata, handles)
+% hObject    handle to deleteTimer (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+global bombTimer;
+stop(bombTimer);
+delete(bombTimer);
