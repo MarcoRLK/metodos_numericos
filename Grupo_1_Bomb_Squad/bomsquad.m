@@ -58,10 +58,12 @@ handles.output = hObject;
 % Update handles structure
 guidata(hObject, handles);
 
-global thereIsTime startX endX f x y currentIndex bombTimer precision;
+global thereIsTime startX endX f x y currentIndex bombTimer precision wickTime quantityOfPoints;
 
-precision = 0.1;
-quantityOfPoints = 100;
+% % Configuration values 
+wickTime = 5; % The time to update the bomb wick in seconds
+precision = 0.1; % The precision to the values
+quantityOfPoints = 100; % Quantity of points in the axis
 
 thereIsTime = true;
 setTime(0);
@@ -83,11 +85,9 @@ end
 
 currentIndex = 1; % The current index on 'x' array
 
-set(handles.axes3,'YTickLabel',[]); % Take out the Y axis numbers
-
 bombTimer = timer('ExecutionMode', 'FixedRate', ...
-    'Period', 3, ...
-    'TimerFcn', {@(~,~)updateBombValue});
+    'Period', wickTime, ...
+    'TimerFcn', {@updateBombValue, handles});
 disableButtons(handles);
 
 
@@ -113,7 +113,7 @@ function enableButtons(handles)
     set(handles.cutBtn, 'Enable', 'on');
     set(handles.testBtn, 'Enable', 'on');
 
-function updateBombValue
+function updateBombValue(obj, event, handles)
     global x y currentIndex precision;
     if currentIndex <= length(x)
         
@@ -122,6 +122,7 @@ function updateBombValue
         if abs(y(currentIndex)) > precision
             disp(currentIndex);
             plot(x(1:currentIndex), y(1:currentIndex), 'r');
+            set(handles.axes3,'XTickLabel',[]); % Take out the X axis numbers
             currentIndex = currentIndex + 1;
         else
             disp('A bomba chegou primeiro na raiz e explodiu! Perdeu!');
