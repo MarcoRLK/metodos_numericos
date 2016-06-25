@@ -10,9 +10,9 @@ function f = getRandIterativeFunctions()
         case 2
            f = 'x^2 - sqrt(x)';
         case 3
-           f = 'x^(1/3) + e^x';
+           f = 'x^(1/3) + exp(x)';
         case 4
-           f = 'x - e^(-x)';
+           f = 'x - exp(-x)';
     end
            
 end

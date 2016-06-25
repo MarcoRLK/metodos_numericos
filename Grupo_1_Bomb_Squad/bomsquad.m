@@ -22,7 +22,7 @@ function varargout = bomsquad(varargin)
 
 % Edit the above text to modify the response to help bomsquad
 
-% Last Modified by GUIDE v2.5 24-Jun-2016 21:37:51
+% Last Modified by GUIDE v2.5 25-Jun-2016 11:56:16
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -61,6 +61,7 @@ guidata(hObject, handles);
 global thereIsTime startX endX f x y currentIndex bombTimer precision;
 
 precision = 0.1;
+quantityOfPoints = 100;
 
 thereIsTime = true;
 setTime(0);
@@ -74,7 +75,7 @@ set(handles.wireFunction, 'String', func);
 %f = @(x) cos(x) - exp(-x); % Made the function available as an anonymous function 'f'
 f = inline(func);
 
-x = linspace(startX, endX, 20); % Function 'f' x values
+x = linspace(startX, endX, quantityOfPoints); % Function 'f' x values
 y = [];
 for i = 1:length(x)
     y = [y f(x(i))];
@@ -120,7 +121,7 @@ function updateBombValue
         
         if abs(y(currentIndex)) > precision
             disp(currentIndex);
-            plot(x(1:currentIndex), y(1:currentIndex));
+            plot(x(1:currentIndex), y(1:currentIndex), 'r');
             currentIndex = currentIndex + 1;
         else
             disp('A bomba chegou primeiro na raiz e explodiu! Perdeu!');
@@ -306,18 +307,18 @@ function cutBtn_Callback(hObject, eventdata, handles)
     end
     
 
-function edit4_Callback(hObject, eventdata, handles)
-% hObject    handle to edit4 (see GCBO)
+function testPoint_Callback(hObject, eventdata, handles)
+% hObject    handle to testPoint (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
-% Hints: get(hObject,'String') returns contents of edit4 as text
-%        str2double(get(hObject,'String')) returns contents of edit4 as a double
+% Hints: get(hObject,'String') returns contents of testPoint as text
+%        str2double(get(hObject,'String')) returns contents of testPoint as a double
 
 
 % --- Executes during object creation, after setting all properties.
-function edit4_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to edit4 (see GCBO)
+function testPoint_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to testPoint (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    empty - handles not created until after all CreateFcns called
 
@@ -333,21 +334,36 @@ function testBtn_Callback(hObject, eventdata, handles)
 % hObject    handle to testBtn (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
+    [testPoint, isNumber] = str2num(get(handles.testPoint, 'String'));
+    if isNumber
+        iterativeFunction = get(handles.iterativeFunction, 'String');
+        x = testPoint;
+        try
+            value = eval(iterativeFunction);
+            set(handles.testResult, 'String', 'Processando...');
+            pause(1);
+            set(handles.testResult, 'String', value);
+        catch exception
+            set(handles.testResult, 'String', 'Função iterativa inválida.');
+            disp('Função iterativa inválida.');
+        end
+    else
+        set(handles.testResult, 'String', 'Valor de teste inválido.');
+    end
 
 
-
-function edit5_Callback(hObject, eventdata, handles)
-% hObject    handle to edit5 (see GCBO)
+function testResult_Callback(hObject, eventdata, handles)
+% hObject    handle to testResult (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
-% Hints: get(hObject,'String') returns contents of edit5 as text
-%        str2double(get(hObject,'String')) returns contents of edit5 as a double
+% Hints: get(hObject,'String') returns contents of testResult as text
+%        str2double(get(hObject,'String')) returns contents of testResult as a double
 
 
 %--- Executes during object creation, after setting all properties.
-function edit5_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to edit5 (see GCBO)
+function testResult_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to testResult (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    empty - handles not created until after all CreateFcns called
 
