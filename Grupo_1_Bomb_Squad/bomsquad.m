@@ -22,7 +22,7 @@ function varargout = bomsquad(varargin)
 
 % Edit the above text to modify the response to help bomsquad
 
-% Last Modified by GUIDE v2.5 24-Jun-2016 20:27:47
+% Last Modified by GUIDE v2.5 24-Jun-2016 21:37:51
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -58,21 +58,6 @@ handles.output = hObject;
 % Update handles structure
 guidata(hObject, handles);
 
-
-
-% UIWAIT makes bomsquad wait for user response (see UIRESUME)
-% uiwait(handles.figure1);
-
-
-% --- Outputs from this function are returned to the command line.
-function varargout = bomsquad_OutputFcn(hObject, eventdata, handles) 
-% varargout  cell array for returning output args (see VARARGOUT);
-% hObject    handle to figure
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Get default command line output from handles structure
-varargout{1} = handles.output;
 global thereIsTime startX endX f x y currentIndex bombTimer precision;
 
 precision = 0.1;
@@ -102,6 +87,30 @@ set(handles.axes3,'YTickLabel',[]); % Take out the Y axis numbers
 bombTimer = timer('ExecutionMode', 'FixedRate', ...
     'Period', 3, ...
     'TimerFcn', {@(~,~)updateBombValue});
+disableButtons(handles);
+
+
+% UIWAIT makes bomsquad wait for user response (see UIRESUME)
+% uiwait(handles.figure1);
+
+
+% --- Outputs from this function are returned to the command line.
+function varargout = bomsquad_OutputFcn(hObject, eventdata, handles) 
+% varargout  cell array for returning output args (see VARARGOUT);
+% hObject    handle to figure
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Get default command line output from handles structure
+varargout{1} = handles.output;
+
+function disableButtons(handles)
+    set(handles.cutBtn, 'Enable', 'off');
+    set(handles.testBtn, 'Enable', 'off');
+    
+function enableButtons(handles)
+    set(handles.cutBtn, 'Enable', 'on');
+    set(handles.testBtn, 'Enable', 'on');
 
 function updateBombValue
     global x y currentIndex precision;
@@ -115,26 +124,39 @@ function updateBombValue
             currentIndex = currentIndex + 1;
         else
             disp('A bomba chegou primeiro na raiz e explodiu! Perdeu!');
-            endGame();
+            endGame(false);
         end
     else
         disp('Função acabou.');
     end
     
-function endGame
+function endGame(win)
     global thereIsTime currentIndex bombTimer;
     currentIndex = 1;
     thereIsTime = false;
     setTime(0);
     stop(bombTimer);
     close(bomsquad);
-    exploded
+    
+    if win
+        bomb_defused % Open the bomb defused screen
+        [signal,Fs]=audioread('bomb_has_been_defused.wav');
+    else
+        exploded % Open the bomb exploded screen
+        [signal,Fs]=audioread('bomb_exploded.wav');
+    end
+    
+    % Plays the respective audio
+    player=audioplayer(signal,Fs); 
+    play(player)
+    pause(3);
     
 
 % --- Executes on button press in startPlay.
 function startPlay_Callback(hObject, eventdata, handles)
     global bombTimer;
-    set(hObject, 'Enable', 'off');
+    set(hObject, 'Enable', 'off'); % Disable startPlay button
+    enableButtons(handles);
     start(bombTimer);
     startTimer(handles);
     
@@ -241,18 +263,18 @@ function pushbutton2_Callback(hObject, eventdata, handles)
 
 
 
-function edit3_Callback(hObject, eventdata, handles)
-% hObject    handle to edit3 (see GCBO)
+function cutPoint_Callback(hObject, eventdata, handles)
+% hObject    handle to cutPoint (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
-% Hints: get(hObject,'String') returns contents of edit3 as text
-%        str2double(get(hObject,'String')) returns contents of edit3 as a double
+% Hints: get(hObject,'String') returns contents of cutPoint as text
+%        str2double(get(hObject,'String')) returns contents of cutPoint as a double
 
 
 % --- Executes during object creation, after setting all properties.
-function edit3_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to edit3 (see GCBO)
+function cutPoint_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to cutPoint (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    empty - handles not created until after all CreateFcns called
 
@@ -263,13 +285,26 @@ if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgr
 end
 
 
-% --- Executes on button press in pushbutton3.
-function pushbutton3_Callback(hObject, eventdata, handles)
-% hObject    handle to pushbutton3 (see GCBO)
+% --- Executes on button press in cutBtn.
+function cutBtn_Callback(hObject, eventdata, handles)
+% hObject    handle to cutBtn (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-
-
+    cutPoint = get(handles.cutPoint, 'String');
+    cutPoint = str2num(cutPoint);
+    
+    global f precision;
+    
+    % Is the root of the function
+    if( abs(f(cutPoint)) < precision )
+        endGame(true);
+        
+    % Tried to cut the wire in the wrong place
+    else
+        disp('Cortou o fio no lugar errado! Perdeu!');
+        endGame(false);
+    end
+    
 
 function edit4_Callback(hObject, eventdata, handles)
 % hObject    handle to edit4 (see GCBO)
@@ -293,9 +328,9 @@ if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgr
 end
 
 
-%--- Executes on button press in pushbutton5.
-function pushbutton5_Callback(hObject, eventdata, handles)
-% hObject    handle to pushbutton5 (see GCBO)
+%--- Executes on button press in testBtn.
+function testBtn_Callback(hObject, eventdata, handles)
+% hObject    handle to testBtn (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
