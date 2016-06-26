@@ -116,6 +116,52 @@ function varargout = level1_OutputFcn(hObject, eventdata, handles)
 
 % Get default command line output from handles structure
 varargout{1} = handles.output;
+global tempoInicial tempoCorrendo;
+tempoCorrendo = true;
+tempoInicial=['00:01;00,00'];
+set(handles.timer,'String',tempoInicial);
+tim = 0;
+
+if tempoCorrendo == true;
+   cro=get(handles.timer,'String');
+   tim=str2num(cro(1,[1 2]))*3600+str2num(cro(1,[4 5]))*60+str2num(cro(1,[7 8]))+str2num(cro(1,[10 11]))/100;
+   t = 0;
+end
+
+tic
+while tempoCorrendo == true
+    
+    time=t+tim;
+    hhhh=fix(time/3600);
+    mmmm=fix((time-hhhh*3600)/60);
+    ssss=fix(time-hhhh*3600-mmmm*60);
+    mile=fix((time-hhhh*3600-mmmm*60-ssss)*100);
+    hh=num2str(hhhh);
+    v=size(hh,2);
+    if v==1
+        hh=['0',hh];
+    end
+    mm=num2str(mmmm);
+    v=size(mm,2);
+    if v==1
+        mm=['0',mm];
+    end
+    ss=num2str(ssss);
+    v=size(ss,2);
+    if v==1
+        ss=['0',ss];
+    end
+    mi=num2str(mile);
+    v=size(mi,2);
+    if v==1
+        mi=['0',mi];
+    end
+    hora=[hh,':',mm,';',ss,',',mi];    
+    set(handles.timer,'String',hora);
+    t=-toc;
+    pause(0.01)
+        
+end
 
 
 % --- Executes during object creation, after setting all properties.
@@ -165,9 +211,9 @@ feedBack();
 function feedBack()
 global chosenWire rightWire;
 if chosenWire == rightWire
-    bomb_defused % Open the bomb defused screen
-    [signal,Fs]=audioread('bomb_has_been_defused.wav');
+    defusedLevel1 % Open the bomb defused screen
+    close(level1);
 else
     explodedLevel1 % Open the bomb exploded screen
-    [signal,Fs]=audioread('bomb_exploded.wav');
+    close(level1);
 end

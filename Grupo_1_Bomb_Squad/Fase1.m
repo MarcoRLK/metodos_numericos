@@ -61,7 +61,6 @@ guidata(hObject, handles);
 bg = imread('fase1.jpg'); imagesc(bg);
 set(gca, 'visible', 'off') ;
 
-defineFunctions(handles);
 
 
 % UIWAIT makes Fase1 wait for user response (see UIRESUME)
@@ -124,15 +123,6 @@ while tempoCorrendo == true
         
 end
 
-% --- Executes during object creation, after setting all properties.
-function fio1_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to fio1 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    empty - handles not created until after all CreateFcns called
-
-% Hint: place code in OpeningFcn to populate fio1
-fiovermelho = imread('fiovermelho.png'); imagesc(fiovermelho);
-set(gca, 'visible', 'off') ;
 
 
 % --- Executes on button press in fio1.
@@ -169,12 +159,6 @@ function pushbutton5_Callback(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
-function defineFunctions(handles)
-    normalFunctions = ['sen(x)', 'cos(x)', 'sec(x)', 'tg(x)'];
-    iteractiveFunctions = ['x - (sen(x)/cos(x))', 'x - (cos(x)/-sen(x))', 'x - (sec(x)/(sec(x)*tg(x)))', 'x - (tg(x)/sec(x)^2)' ];
-    wrongIteractiveFunctions = ['x - (sen(x)/- cos(x))', 'y - (cos(x)/-sen(x))', 'x - (sen(x)/(sec(x)*tg(x)))', 'x - (tg(x)/tg(x) *sec(x)^2)' ];
-    handles = guidata(GuiHandle);
-    set(handles.func1,'String','aaa');
 
     
     
