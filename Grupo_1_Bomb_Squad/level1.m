@@ -22,7 +22,7 @@ function varargout = level1(varargin)
 
 % Edit the above text to modify the response to help level1
 
-% Last Modified by GUIDE v2.5 26-Jun-2016 17:12:34
+% Last Modified by GUIDE v2.5 26-Jun-2016 18:24:11
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -168,7 +168,6 @@ if chosenWire == rightWire
     bomb_defused % Open the bomb defused screen
     [signal,Fs]=audioread('bomb_has_been_defused.wav');
 else
-    exploded % Open the bomb exploded screen
+    explodedLevel1 % Open the bomb exploded screen
     [signal,Fs]=audioread('bomb_exploded.wav');
 end
-
