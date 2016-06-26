@@ -22,7 +22,7 @@ function varargout = Fase1(varargin)
 
 % Edit the above text to modify the response to help Fase1
 
-% Last Modified by GUIDE v2.5 21-Jun-2016 18:54:04
+% Last Modified by GUIDE v2.5 25-Jun-2016 18:57:36
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -41,6 +41,7 @@ if nargout
 else
     gui_mainfcn(gui_State, varargin{:});
 end
+
 % End initialization code - DO NOT EDIT
 
 
@@ -57,10 +58,11 @@ handles.output = hObject;
 
 % Update handles structure
 guidata(hObject, handles);
-
-% Backgroung da primeira fase
 bg = imread('fase1.jpg'); imagesc(bg);
 set(gca, 'visible', 'off') ;
+
+defineFunctions(handles);
+
 
 % UIWAIT makes Fase1 wait for user response (see UIRESUME)
 % uiwait(handles.figure1);
@@ -75,7 +77,7 @@ function varargout = Fase1_OutputFcn(hObject, eventdata, handles)
 
 % Get default command line output from handles structure
 varargout{1} = handles.output;
-global tempoIncial tempoCorrendo;
+global tempoInicial tempoCorrendo;
 tempoCorrendo = true;
 tempoInicial=['00:01;00,00'];
 set(handles.timer,'String',tempoInicial);
@@ -121,3 +123,58 @@ while tempoCorrendo == true
     pause(0.01)
         
 end
+
+% --- Executes during object creation, after setting all properties.
+function fio1_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to fio1 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: place code in OpeningFcn to populate fio1
+fiovermelho = imread('fiovermelho.png'); imagesc(fiovermelho);
+set(gca, 'visible', 'off') ;
+
+
+% --- Executes on button press in fio1.
+function fio1_Callback(hObject, eventdata, handles)
+% hObject    handle to fio1 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+
+% --- Executes during object creation, after setting all properties.
+function fio1_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to fio1 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+
+% --- Executes on button press in pushbutton3.
+function pushbutton3_Callback(hObject, eventdata, handles)
+% hObject    handle to pushbutton3 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+
+% --- Executes on button press in pushbutton4.
+function pushbutton4_Callback(hObject, eventdata, handles)
+% hObject    handle to pushbutton4 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+
+% --- Executes on button press in pushbutton5.
+function pushbutton5_Callback(hObject, eventdata, handles)
+% hObject    handle to pushbutton5 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+function defineFunctions(handles)
+    normalFunctions = ['sen(x)', 'cos(x)', 'sec(x)', 'tg(x)'];
+    iteractiveFunctions = ['x - (sen(x)/cos(x))', 'x - (cos(x)/-sen(x))', 'x - (sec(x)/(sec(x)*tg(x)))', 'x - (tg(x)/sec(x)^2)' ];
+    wrongIteractiveFunctions = ['x - (sen(x)/- cos(x))', 'y - (cos(x)/-sen(x))', 'x - (sen(x)/(sec(x)*tg(x)))', 'x - (tg(x)/tg(x) *sec(x)^2)' ];
+    handles = guidata(GuiHandle);
+    set(handles.func1,'String','aaa');
+
+    
+    
