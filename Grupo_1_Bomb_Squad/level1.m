@@ -22,7 +22,7 @@ function varargout = level1(varargin)
 
 % Edit the above text to modify the response to help level1
 
-% Last Modified by GUIDE v2.5 26-Jun-2016 18:24:11
+% Last Modified by GUIDE v2.5 26-Jun-2016 23:18:11
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -228,3 +228,11 @@ else
     close all;
     explodedLevel1 % Open the bomb exploded screen
 end
+
+
+% --- Executes on button press in help.
+function help_Callback(hObject, eventdata, handles)
+% hObject    handle to help (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+colaLevel1;

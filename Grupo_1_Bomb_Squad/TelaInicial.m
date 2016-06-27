@@ -22,7 +22,7 @@ function varargout = TelaInicial(varargin)
 
 % Edit the above text to modify the response to help TelaInicial
 
-% Last Modified by GUIDE v2.5 26-Jun-2016 22:06:25
+% Last Modified by GUIDE v2.5 26-Jun-2016 22:57:36
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -86,22 +86,20 @@ function startLevel1_Callback(hObject, eventdata, handles)
 close(TelaInicial);
 level1Tutorial;
 
-% --- Executes on button press in help.
-function help_Callback(hObject, eventdata, handles)
-% hObject    handle to help (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-
-% --- Executes on button press in credits.
-function credits_Callback(hObject, eventdata, handles)
-% hObject    handle to credits (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
 
 % --- Executes on button press in startLevel2.
 function startLevel2_Callback(hObject, eventdata, handles)
 % hObject    handle to startLevel2 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
+close(TelaInicial);
+bomsquad;
+
+
+% --- Executes on button press in exit.
+function exit_Callback(hObject, eventdata, handles)
+% hObject    handle to exit (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+close(TelaInicial);
