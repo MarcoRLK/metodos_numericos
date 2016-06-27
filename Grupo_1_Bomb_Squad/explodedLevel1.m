@@ -22,7 +22,7 @@ function varargout = explodedLevel1(varargin)
 
 % Edit the above text to modify the response to help explodedLevel1
 
-% Last Modified by GUIDE v2.5 26-Jun-2016 19:24:38
+% Last Modified by GUIDE v2.5 26-Jun-2016 20:37:13
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -81,8 +81,8 @@ function tryAgain_Callback(hObject, eventdata, handles)
 % hObject    handle to tryAgain (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-level1 %opens the level1 again
 close(explodedLevel1);
+level1 %opens the level1 again
 
 % --- Executes on button press in backToMenu.
 function backToMenu_Callback(hObject, eventdata, handles)

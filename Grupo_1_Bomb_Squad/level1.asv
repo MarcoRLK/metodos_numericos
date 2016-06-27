@@ -84,7 +84,7 @@ set(handles.inter3, 'String',wrongIteractFunctions(3));
 set(handles.inter4, 'String',wrongIteractFunctions(4));
 
 %defining the right wire
-rightWire = round(rand(1)*3) + 1;
+rightWire = round(rand(1)*3) + 1
 
 %calling function to place the right itecactive function in the right wire
 placeRightFunction(hObject, eventdata, handles);
@@ -114,8 +114,10 @@ function varargout = level1_OutputFcn(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
+% Get default command line output from handles structure
+varargout{1} = handles.output;
 global chosenWire;
-tempoInicial=['00:01;00,00'];
+tempoInicial=['00:00;05,00'];
 set(handles.timer,'String',tempoInicial);
 tim = 0;
 
@@ -162,17 +164,14 @@ while tempoCorrendo == true
         
     if hora == ['00:00;00,00']
         chosenWire = 0;
-        close all;
         explodedLevel1 % Open the bomb exploded screen
-        x = 1
+        tempoCorrendo = false;
+        close(handles.gui);
+        feedBack();
         break;
     end
+    
 end
-
-
-% Get default command line output from handles structure
-varargout{1} = handles.output;
-
 
 
 % --- Executes during object creation, after setting all properties.
@@ -222,9 +221,10 @@ feedBack();
 function feedBack()
 global chosenWire rightWire;
 if chosenWire == rightWire
-    close all;
+    close(level1);
     defusedLevel1 % Open the bomb defused screen
+    
 else
-    close all;
     explodedLevel1 % Open the bomb exploded screen
+    close(level1);
 end

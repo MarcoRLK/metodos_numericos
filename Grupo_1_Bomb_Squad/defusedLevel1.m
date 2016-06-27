@@ -22,7 +22,7 @@ function varargout = defusedLevel1(varargin)
 
 % Edit the above text to modify the response to help defusedLevel1
 
-% Last Modified by GUIDE v2.5 26-Jun-2016 19:30:52
+% Last Modified by GUIDE v2.5 26-Jun-2016 20:37:22
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -81,13 +81,15 @@ function backToMenu_Callback(hObject, eventdata, handles)
 % hObject    handle to backToMenu (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-TelaInicial %opens the main menu
 close(defusedLevel1);
+TelaInicial %opens the main menu
+
 
 % --- Executes on button press in tryAgain.
 function tryAgain_Callback(hObject, eventdata, handles)
 % hObject    handle to tryAgain (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-level1 %opens the level1 again
 close(defusedLevel1);
+level1 %opens the level1 again
+
